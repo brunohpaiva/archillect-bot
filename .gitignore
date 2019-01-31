@@ -1,0 +1,4 @@
+node_modules/
+.env
+gif.gif
+package-lock.json
