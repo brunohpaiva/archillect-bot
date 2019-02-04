@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "lint": "eslint app --fix",
+    "format": "prettier --trailing-comma es5 --single-quote --write app/**/*.js"
   },
   "author": "Bruno Henrique Paiva",
   "license": "MIT",
@@ -14,5 +16,24 @@
     "dotenv": "^6.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.13.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.3",
+    "prettier": "^1.16.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "npm run format",
+      "git add"
+    ]
   }
 }
