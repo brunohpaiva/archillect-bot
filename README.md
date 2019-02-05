@@ -1,6 +1,6 @@
 # archillect-bot
 
-Discord Bot that fetches images from @archillect twitter account
+Discord Bot that fetches images from [archillect website](http://archillect.com/)
 
 ## Getting Started
 
@@ -30,13 +30,9 @@ $ npm install
 $ yarn
 ```
 
-3. Rename the file `default.env` to `.env` and add your APIs keys
+3. Rename the file `default.env` to `.env` and add your token
 
 ```
-TWITTER_CONSUMER_KEY="key"
-TWITTER_CONSUMER_SECRET="secret"
-TWITTER_ACCESS_TOKEN_KEY="key"
-TWITTER_ACCESS_TOKEN_SECRET="secret"
 DISCORD_BOT_TOKEN="token"
 ```
 
@@ -58,8 +54,6 @@ $ yarn start
 ## Built With
 
 - [discord.js](https://discord.js.org/) - Powerful node.js module that allows you to interact with the Discord API very easily.
-- [node-fluent-ffmpeg](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg) - FFMPEG cli client for NodeJS.
-- [twitter](https://github.com/desmondmorris/node-twitter) - Client library for the Twitter REST and Streaming API's.
 
 ## Authors
 

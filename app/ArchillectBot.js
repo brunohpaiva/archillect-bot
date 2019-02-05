@@ -1,126 +1,66 @@
 const Discord = require('discord.js');
-const Twitter = require('twitter');
-const isValidArchillectTweet = require('./utils/isValidArchillectTweet');
-const isValidArchillinkTweet = require('./utils/isValidArchillinkTweet');
-const getMedia = require('./utils/getMedia');
-const convertToGif = require('./utils/convertToGif');
+const fetchLatestArchillectId = require('./utils/fetchLatestArchillectId');
+const fetchArchillectImage = require('./utils/fetchArchillectImage');
 const findArchillectTextChannel = require('./utils/findArchillectTextChannel');
-
-const ARCHILLECT_TWITTER_USER_ID = 2907774137;
-const ARCHILLINKS_TWITTER_USER_ID = 808595043560857600;
 
 class ArchillectBot {
   constructor() {
     this.client = new Discord.Client();
   }
 
-  initTwitterApi(credentials) {
-    this.twitterApi = new Twitter(credentials);
+  async getLatestImage() {
+    const id = await fetchLatestArchillectId();
+    const image = await fetchArchillectImage(id);
+    this.latestImage = image;
+    return image;
   }
 
-  async getLatestTweet() {
-    const latestTweets = await this.twitterApi.get('statuses/user_timeline', {
-      user_id: ARCHILLECT_TWITTER_USER_ID,
-      count: 3,
-      trim_user: true,
-    });
-    for (let i = 0; i < latestTweets.length; i++) {
-      let tweet = latestTweets[i];
-      if (this.latestTweet && tweet.id === this.latestTweet.id) {
-        break;
-      }
-      if (!isValidArchillectTweet(tweet)) {
-        continue;
-      }
-      this.latestTweet = tweet;
-      return tweet;
-    }
-    return undefined;
-  }
-
-  async getArchillinkTweet(archillectTweet) {
-    const latestArchillinkTweets = await this.twitterApi.get(
-      'statuses/user_timeline',
-      {
-        user_id: ARCHILLINKS_TWITTER_USER_ID,
-        count: 5,
-        trim_user: true,
-      }
-    );
-    for (let i = 0; i < latestArchillinkTweets.length; i++) {
-      let tweet = latestArchillinkTweets[i];
-      if (isValidArchillinkTweet(tweet, archillectTweet)) {
-        return tweet;
-      }
-    }
-  }
-
-  async sendArchillectTweet(tweet, guilds) {
+  buildImageEmbed(image) {
     const embed = new Discord.RichEmbed({
-      title: 'New tweet',
-      url: `https://twitter.com/archillect/status/${tweet.id_str}`,
+      title: 'New image',
+      url: `http://archillect.com/${image.id}`,
       color: 16700087,
-      timestamp: tweet.created_at,
+      timestamp: new Date().toISOString(),
       author: {
         name: 'Archillect',
-        url: 'https://twitter.com/archillect',
+        url: 'http://archillect.com',
         icon_url:
           'https://pbs.twimg.com/profile_images/1045579977067024384/S0luKMwQ_400x400.jpg',
       },
+      image: { url: image.url },
     });
-    const media = getMedia(tweet);
-    if (media.type === 'photo') {
-      embed.setImage(media.media_url_https);
-    } else if (media.type === 'animated_gif') {
-      console.log('Converting mp4 to gif...');
-      await convertToGif(
-        media.video_info.variants.filter(
-          variant => variant.content_type === 'video/mp4'
-        )[0].url,
-        'gif.gif'
-      );
 
-      embed.attachFile('gif.gif');
-      embed.setImage('attachment://gif.gif');
+    embed.addField('Google Image Search', image.sources.google);
+
+    if (image.sources.otherLinks.length > 0) {
+      embed.addField('Links', image.sources.otherLinks.join('\n'));
     }
 
-    let messagesPromises = [];
-    if (!guilds) {
-      guilds = this.client.guilds;
-    }
-    guilds.forEach(async guild => {
-      let channel = findArchillectTextChannel(guild);
+    return embed;
+  }
 
-      if (!channel) {
-        console.log(`Trying to create text channel for guild ${guild.name}`);
+  async sendImageEmbedToGuild(guild, embed) {
+    let channel = findArchillectTextChannel(guild);
 
-        try {
-          channel = await guild.createChannel('archillect', 'text');
-        } catch (error) {
-          console.error(error);
-          return;
-        }
+    if (!channel) {
+      console.log(`Trying to create text channel for guild ${guild.name}`);
+
+      try {
+        channel = await guild.createChannel('archillect', 'text');
+      } catch (error) {
+        console.error(error);
+        return;
       }
-
-      messagesPromises.push(channel.send({ embed }).catch(console.error));
-    });
-
-    const archillinkTweet = await this.getArchillinkTweet(tweet);
-    if (archillinkTweet) {
-      embed.addField(
-        'Links',
-        archillinkTweet.entities.urls
-          .filter(url => url.expanded_url.indexOf(tweet.id_str) === -1)
-          .map(url => url.expanded_url)
-          .join('\n')
-      );
-
-      Promise.all(messagesPromises).then(messages =>
-        messages.forEach(async sentMessage =>
-          sentMessage.edit({ embed }).catch(console.error)
-        )
-      );
     }
+
+    channel.send({ embed });
+  }
+
+  async sendImageToGuilds(image) {
+    const embed = this.buildImageEmbed(image);
+    this.client.guilds.forEach(
+      async guild => await this.sendImageEmbedToGuild(guild, embed)
+    );
   }
 
   async discordLogin(token) {

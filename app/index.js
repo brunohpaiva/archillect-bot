@@ -1,20 +1,17 @@
 const getTime = require('date-fns/getTime');
 const ArchillectBot = require('./ArchillectBot');
-const getNextTweetDate = require('./utils/getNextTweetDate');
+const getNextImageDate = require('./utils/getNextImageDate');
 
 const archillectBot = new ArchillectBot();
 
-const sendLatestTweet = async guilds =>
-  archillectBot.sendArchillectTweet(
-    await archillectBot.getLatestTweet(),
-    guilds
-  );
+const sendLatestImageToGuilds = async guilds =>
+  archillectBot.sendImageToGuilds(await archillectBot.getLatestImage(), guilds);
 
-const sendLatestTweetAndWait = () => {
-  sendLatestTweet();
+const sendLatestImageAndWait = () => {
+  sendLatestImageToGuilds();
   setTimeout(
-    () => sendLatestTweetAndWait(),
-    getTime(getNextTweetDate()) - getTime(new Date())
+    () => sendLatestImageAndWait(),
+    getTime(getNextImageDate()) - getTime(new Date())
   );
 };
 
@@ -25,19 +22,18 @@ archillectBot.client.on('ready', () => {
     }`
   );
 
-  sendLatestTweetAndWait();
+  sendLatestImageAndWait();
 });
 
 archillectBot.client.on('guildCreate', guild => {
-  archillectBot.sendArchillectTweet(archillectBot.latestTweet, [guild]);
+  if (archillectBot.latestImage) {
+    archillectBot.sendImageEmbedToGuild(
+      guild,
+      archillectBot.buildImageEmbed(archillectBot.latestImage)
+    );
+  }
 });
 
 require('dotenv').config();
 
-archillectBot.initTwitterApi({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-});
 archillectBot.discordLogin(process.env.DISCORD_BOT_TOKEN);

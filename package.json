@@ -13,9 +13,7 @@
   "dependencies": {
     "date-fns": "2.0.0-alpha.27",
     "discord.js": "^11.4.2",
-    "dotenv": "^6.2.0",
-    "fluent-ffmpeg": "^2.1.2",
-    "twitter": "^1.7.1"
+    "dotenv": "^6.2.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
