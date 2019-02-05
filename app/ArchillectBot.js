@@ -51,6 +51,20 @@ class ArchillectBot {
         console.error(error);
         return;
       }
+    } else {
+      let lastMessages = await channel.fetchMessages({ limit: 1 });
+      if (lastMessages && lastMessages.size === 1) {
+        let lastMessage = lastMessages.get(lastMessages.firstKey());
+        if (
+          lastMessage.author.id === this.client.user.id &&
+          lastMessage.embeds.length === 1
+        ) {
+          let lastEmbed = lastMessage.embeds[0];
+          if (embed.url === lastEmbed.url) {
+            return;
+          }
+        }
+      }
     }
 
     channel.send({ embed });

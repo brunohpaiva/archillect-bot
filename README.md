@@ -50,6 +50,7 @@ $ yarn start
 
 - Manage Channels
 - Send Messages
+- View Channel
 
 ## Built With
 
