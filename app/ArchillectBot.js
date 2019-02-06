@@ -9,7 +9,9 @@ class ArchillectBot {
   }
 
   async getLatestImage() {
-    const id = await fetchLatestArchillectId();
+    const id = this.latestImage
+      ? this.latestImage.id + 1
+      : await fetchLatestArchillectId();
     const image = await fetchArchillectImage(id);
     this.latestImage = image;
     return image;
