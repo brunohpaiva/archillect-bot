@@ -41,6 +41,14 @@ class ArchillectBot {
     return embed;
   }
 
+  isSameImageMessage(message, newEmbed) {
+    return (
+      message.author.id === this.client.user.id &&
+      message.embeds.length === 1 &&
+      newEmbed.url === message.embeds[0].url
+    );
+  }
+
   async sendImageEmbedToGuild(guild, embed) {
     let channel = findArchillectTextChannel(guild);
 
@@ -57,14 +65,8 @@ class ArchillectBot {
       let lastMessages = await channel.fetchMessages({ limit: 1 });
       if (lastMessages && lastMessages.size === 1) {
         let lastMessage = lastMessages.get(lastMessages.firstKey());
-        if (
-          lastMessage.author.id === this.client.user.id &&
-          lastMessage.embeds.length === 1
-        ) {
-          let lastEmbed = lastMessage.embeds[0];
-          if (embed.url === lastEmbed.url) {
-            return;
-          }
+        if (this.isSameImageMessage(lastMessage, embed)) {
+          return;
         }
       }
     }
