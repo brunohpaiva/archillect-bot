@@ -55,6 +55,7 @@ $ yarn start
 ## Built With
 
 - [discord.js](https://discord.js.org/) - Powerful node.js module that allows you to interact with the Discord API very easily.
+- [TypeScript](https://www.typescriptlang.org/) - A typed superset of JavaScript that compiles to plain JavaScript.
 
 ## Authors
 
