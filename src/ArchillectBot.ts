@@ -55,8 +55,13 @@ class ArchillectBot extends Client {
       console.log(`Trying to create text channel for guild ${guild.name}`);
       channel = (await guild.createChannel(
         "archillect",
-        "text"
+        "text",
+        undefined,
+        "Archillect's images will be sent in this channel"
       )) as TextChannel;
+      channel.send(
+        "Hello! On this channel I'll send Archillect's images every 10 minutes."
+      );
     } else {
       let lastMessages = await channel.fetchMessages({ limit: 1 });
       if (lastMessages && lastMessages.size === 1) {
