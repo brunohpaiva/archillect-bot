@@ -51,6 +51,7 @@ $ yarn start
 - Manage Channels
 - Send Messages
 - View Channel
+
 53-bit integer: **2064**
 
 ## Built With
