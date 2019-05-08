@@ -1,24 +1,25 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "extends": [
-    "eslint:recommended"
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
   ],
+  "plugins": ["@typescript-eslint"],
   "env": {
     "node": true,
     "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
   "rules": {
-    "no-console": "off",
-    "curly": "error",
-    "no-unused-vars": [
+    "@typescript-eslint/camelcase": [
       "warn",
       {
-        "args": "after-used"
+        "allow": ["icon_url"]
       }
     ]
-  },
-  "plugins": []
+  }
 }
