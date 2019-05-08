@@ -6,3 +6,8 @@ export interface ArchillectImage {
     otherLinks: string[];
   };
 }
+
+export interface GuildSettings {
+  prefix: string;
+  channelId?: string;
+}
