@@ -1,22 +1,22 @@
 import dotenv from "dotenv";
 import path from "path";
-import ArchillectBot from "./ArchillectBot";
 import readDir from "./utils/readDir";
+import ArchillectBot from "./ArchillectBot";
 
 const eventsFolder = path.join(__dirname, "events");
 
-async function registerEvents(client: ArchillectBot): Promise<void> {
+const registerEvents = async (client: ArchillectBot): Promise<void> => {
   const files = await readDir(eventsFolder);
-  for (let file of files) {
+  for (const file of files) {
     const event = file.split(".")[0];
     const module = await import(path.join(eventsFolder, file));
     const executor = module.default;
     const boundExecutor = executor.bind(undefined, client);
     client.on(event, boundExecutor);
   }
-}
+};
 
-async function start(): Promise<void> {
+const start = async (): Promise<void> => {
   const client = new ArchillectBot();
 
   try {
@@ -26,7 +26,7 @@ async function start(): Promise<void> {
   }
 
   await client.login(process.env.DISCORD_BOT_TOKEN);
-}
+};
 
 dotenv.config();
 start();

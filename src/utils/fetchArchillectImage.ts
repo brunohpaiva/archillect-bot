@@ -8,6 +8,16 @@ const IMAGE_URL_REGEX = new RegExp(
 const IMAGE_SOURCES_REGEX = new RegExp(
   /(?:<a href=")(...*?)"(?:>)(\?|\d)(?:<\/a>)/g
 );
+const SUCCESS_STATUS_CODE = 200;
+
+interface UnloadedImage {
+  id: number;
+  url?: string;
+  sources: {
+    google?: string;
+    otherLinks: string[];
+  };
+}
 
 const fetchArchillectImage = (id: number): Promise<ArchillectImage> =>
   new Promise(
@@ -18,14 +28,13 @@ const fetchArchillectImage = (id: number): Promise<ArchillectImage> =>
         (response): void => {
           const statusCode = response.statusCode;
 
-          if (statusCode !== 200) {
+          if (statusCode !== SUCCESS_STATUS_CODE) {
             response.resume();
             reject(new Error(`Request Failed. Status Code: ${statusCode}`));
             return;
           }
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const image: Record<string, any> = {
+          const image: UnloadedImage = {
             id,
             sources: {
               google: undefined,
@@ -37,9 +46,9 @@ const fetchArchillectImage = (id: number): Promise<ArchillectImage> =>
           response.on(
             "data",
             (chunk): void => {
-              let chunkString = chunk.toString("utf8");
+              const chunkString = chunk.toString("utf8");
 
-              let imageUrlRegexResult = IMAGE_URL_REGEX.exec(chunkString);
+              const imageUrlRegexResult = IMAGE_URL_REGEX.exec(chunkString);
               if (imageUrlRegexResult && imageUrlRegexResult[1]) {
                 image.url = imageUrlRegexResult[1];
               }
@@ -50,7 +59,7 @@ const fetchArchillectImage = (id: number): Promise<ArchillectImage> =>
                   chunkString
                 )) != null
               ) {
-                let url = imageSourcesRegexResult[1];
+                const url = imageSourcesRegexResult[1];
                 if (imageSourcesRegexResult[2] === "?") {
                   image.sources.google = url;
                 } else {

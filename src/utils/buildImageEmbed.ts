@@ -18,9 +18,8 @@ const buildImageEmbed = (image: ArchillectImage): RichEmbed => {
 
   embed.addField("Google Image Search", image.sources.google);
 
-  if (image.sources.otherLinks.length > 0) {
+  if (image.sources.otherLinks.length > 0)
     embed.addField("Links", image.sources.otherLinks.join("\n"));
-  }
 
   return embed;
 };

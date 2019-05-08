@@ -23,8 +23,8 @@ const fetchLatestArchillectId = (): Promise<number> =>
           response.on(
             "data",
             (chunk): void => {
-              let chunkString = chunk.toString("utf8");
-              let regexResults = ID_REGEX.exec(chunkString);
+              const chunkString = chunk.toString("utf8");
+              const regexResults = ID_REGEX.exec(chunkString);
 
               if (regexResults && regexResults[1]) {
                 id = parseInt(regexResults[1]);

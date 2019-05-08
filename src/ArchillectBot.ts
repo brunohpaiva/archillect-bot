@@ -44,14 +44,6 @@ class ArchillectBot extends Client {
     return image;
   }
 
-  private isSameEmbedUrl(message: Message, newEmbed: RichEmbed): boolean {
-    return (
-      message.author.id === this.user.id &&
-      message.embeds.length === 1 &&
-      newEmbed.url === message.embeds[0].url
-    );
-  }
-
   public async sendEmbedToGuild(
     guild: Guild,
     embed: RichEmbed
@@ -67,9 +59,9 @@ class ArchillectBot extends Client {
         "Hello! On this channel I will send Archillect's images every 10 minutes."
       );
     } else {
-      let lastMessages = await channel.fetchMessages({ limit: 1 });
+      const lastMessages = await channel.fetchMessages({ limit: 1 });
       if (lastMessages && lastMessages.size === 1) {
-        let lastMessage = lastMessages.first();
+        const lastMessage = lastMessages.first();
         if (lastMessage && this.isSameEmbedUrl(lastMessage, embed)) {
           return new Error("Embed already sent.");
         }
@@ -109,6 +101,14 @@ class ArchillectBot extends Client {
     this.guildSettings.set(guild.id, channel.id, "channelId");
 
     return channel;
+  }
+
+  private isSameEmbedUrl(message: Message, newEmbed: RichEmbed): boolean {
+    return (
+      message.author.id === this.user.id &&
+      message.embeds.length === 1 &&
+      newEmbed.url === message.embeds[0].url
+    );
   }
 }
 

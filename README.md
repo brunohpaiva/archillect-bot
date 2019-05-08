@@ -16,18 +16,18 @@ These instructions will get you a copy of the project up and running on your loc
 1. Clone this repository
 
 ```bash
-$ git clone https://github.com/brunohpaiva/archillect-bot.git
-$ cd archillect-bot
+git clone https://github.com/brunohpaiva/archillect-bot.git
+cd archillect-bot
 ```
 
 2. Install dependencies with NPM or Yarn
 
 ```bash
-$ npm install
+npm install
 ```
 
 ```bash
-$ yarn
+yarn
 ```
 
 3. Rename the file `default.env` to `.env` and add your token
@@ -39,11 +39,11 @@ DISCORD_BOT_TOKEN="token"
 4. Run the bot with NPM or Yarn
 
 ```bash
-$ npm start
+npm start
 ```
 
 ```bash
-$ yarn start
+yarn start
 ```
 
 ## Required discord bot permissions
