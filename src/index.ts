@@ -25,7 +25,11 @@ const start = async (): Promise<void> => {
     console.error("Error registering events.", e);
   }
 
-  await client.login(process.env.DISCORD_BOT_TOKEN);
+  try {
+    await client.login(process.env.DISCORD_BOT_TOKEN);
+  } catch (e) {
+    console.error("Error logging in discord api", e);
+  }
 };
 
 dotenv.config();
