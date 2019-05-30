@@ -1,14 +1,23 @@
-import { Client, RichEmbed, Message, Guild, TextChannel } from "discord.js";
+import {
+  Client,
+  RichEmbed,
+  Message,
+  Guild,
+  TextChannel,
+  Collection,
+} from "discord.js";
 import scheduler, { Job } from "node-schedule";
 import Enmap from "enmap";
 import fetchLatestArchillectId from "./utils/fetchLatestArchillectId";
 import fetchArchillectImage from "./utils/fetchArchillectImage";
 import buildImageEmbed from "./utils/buildImageEmbed";
-import { ArchillectImage, GuildSettings } from "./types";
+import { ArchillectImage, GuildSettings, Command } from "./types";
 
 class ArchillectBot extends Client {
   public guildSettings: Enmap;
+  public commands: Collection<string, Command>;
   public latestImage?: ArchillectImage;
+
   private task?: Job;
 
   public constructor() {
@@ -21,6 +30,7 @@ class ArchillectBot extends Client {
       autoFetch: false,
       cloneLevel: "deep",
     });
+    this.commands = new Collection();
   }
 
   public startJob(): void {
