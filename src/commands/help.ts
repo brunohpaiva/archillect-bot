@@ -5,7 +5,6 @@ import ArchillectBot from "../ArchillectBot";
 export default class Help implements Command {
   public usage = "help";
 
-  // @ts-ignore
   public async run(
     _args: string[],
     message: Message,

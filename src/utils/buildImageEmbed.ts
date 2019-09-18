@@ -4,12 +4,12 @@ import { RichEmbed } from "discord.js";
 const buildImageEmbed = (image: ArchillectImage): RichEmbed => {
   const embed = new RichEmbed({
     title: "New image",
-    url: `http://archillect.com/${image.id}`,
+    url: `https://archillect.com/${image.id}`,
     color: 16700087,
     timestamp: new Date(),
     author: {
       name: "Archillect",
-      url: "http://archillect.com",
+      url: "https://archillect.com",
       icon_url:
         "https://pbs.twimg.com/profile_images/1045579977067024384/S0luKMwQ_400x400.jpg",
     },

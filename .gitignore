@@ -3,3 +3,4 @@ dist/
 data/
 .env
 package-lock.json
+yarn-error.log
