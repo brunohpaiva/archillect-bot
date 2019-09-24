@@ -8,7 +8,8 @@
     "start": "npm run build && node dist/index.js",
     "dev": "nodemon --exec \"ts-node src/index.ts\" -e ts",
     "lint": "eslint ./src/**/*.ts --fix",
-    "format": "prettier --write ./src/**/*.ts"
+    "format": "prettier --write ./src/**/*.ts",
+    "test": "jest"
   },
   "author": "Bruno Henrique Paiva",
   "license": "MIT",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
+    "@types/jest": "^24.0.18",
     "@types/node-schedule": "^1.2.4",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
@@ -30,9 +32,11 @@
     "eslint": "^6.4.0",
     "eslint-config-prettier": "^6.3.0",
     "husky": "^3.0.5",
+    "jest": "^24.9.0",
     "lint-staged": "^9.2.5",
     "nodemon": "^1.19.2",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.1.0"
   },
   "husky": {
     "hooks": {

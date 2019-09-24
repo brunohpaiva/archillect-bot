@@ -1,6 +1,6 @@
 # archillect-bot
 
-Discord Bot that fetches images from [archillect website](http://archillect.com/)
+Discord Bot that fetches images from [archillect website](https://archillect.com/)
 
 ## Getting Started
 
