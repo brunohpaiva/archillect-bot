@@ -1,26 +1,22 @@
-import { Guild, TextChannel } from "discord.js";
+import { Guild } from "discord.js";
 import ArchillectBot from "../ArchillectBot";
 import buildImageEmbed from "../utils/buildImageEmbed";
-import { GuildSettings } from "../types";
-
-const DEFAULT_SETTINGS: GuildSettings = { prefix: "a!", channelId: undefined };
 
 const executor = (client: ArchillectBot, guild: Guild): void => {
-  const settings = Object.assign({}, DEFAULT_SETTINGS);
+  client.settingsManager.ensure(guild.id);
 
-  const channel = guild.channels
-    .filter(
-      (channel): boolean =>
-        channel.type === "text" && channel.name === "archillect"
-    )
-    .first() as TextChannel;
+  const channel = guild.channels.find(
+    (channel): boolean =>
+      channel.type === "text" && channel.name === "archillect"
+  );
 
-  if (channel) settings.channelId = channel.id;
+  if (channel) {
+    client.settingsManager.updateField(guild, "channelId", channel.id);
+  }
 
-  client.guildSettings.set(guild.id, settings);
-
-  if (client.latestImage)
+  if (client.latestImage) {
     client.sendEmbedToGuild(guild, buildImageEmbed(client.latestImage));
+  }
 };
 
 export default executor;

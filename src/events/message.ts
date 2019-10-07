@@ -1,6 +1,6 @@
 import ArchillectBot from "../ArchillectBot";
 import { Message } from "discord.js";
-import { GuildSettings, Command } from "../types";
+import { Command } from "../types";
 
 const escapeRegex = (str: string): string =>
   str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -11,16 +11,19 @@ const executor = async (
 ): Promise<void> => {
   if (message.author.bot || message.channel.type === "dm") return;
 
-  const guildSettings = (await client.guildSettings.fetch(
-    message.guild.id
-  )) as GuildSettings;
-
+  const guildSettings = client.settingsManager.get(message.guild);
   const guildPrefix = guildSettings ? escapeRegex(guildSettings.prefix) : "a!";
+
   const regex = new RegExp(`^(<@!?${client.user.id}>|${guildPrefix})\\s*`);
-  if (!regex.test(message.content)) return;
+
+  if (!regex.test(message.content)) {
+    return;
+  }
 
   const regexResults = message.content.match(regex);
-  if (!regexResults) return;
+  if (!regexResults) {
+    return;
+  }
 
   const [, prefix] = regexResults;
   const args = message.content
@@ -29,7 +32,9 @@ const executor = async (
     .split(/ +/);
   let commandName = args.shift();
 
-  if (!commandName || commandName.length === 0) return;
+  if (!commandName || commandName.length === 0) {
+    return;
+  }
 
   commandName = commandName.toLowerCase();
 

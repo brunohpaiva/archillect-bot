@@ -1,20 +1,20 @@
 import {
   Client,
-  RichEmbed,
-  Message,
-  Guild,
-  TextChannel,
   Collection,
+  Guild,
+  Message,
+  RichEmbed,
+  TextChannel,
 } from "discord.js";
 import scheduler, { Job } from "node-schedule";
-import Enmap from "enmap";
-import fetchLatestArchillectId from "./utils/fetchLatestArchillectId";
-import fetchArchillectImage from "./utils/fetchArchillectImage";
+import SettingsManager from "./settingsManager";
+import { ArchillectImage, Command } from "./types";
 import buildImageEmbed from "./utils/buildImageEmbed";
-import { ArchillectImage, GuildSettings, Command } from "./types";
+import fetchArchillectImage from "./utils/fetchArchillectImage";
+import fetchLatestArchillectId from "./utils/fetchLatestArchillectId";
 
 class ArchillectBot extends Client {
-  public guildSettings: Enmap;
+  public settingsManager: SettingsManager;
   public commands: Collection<string, Command>;
   public latestImage?: ArchillectImage;
 
@@ -24,12 +24,7 @@ class ArchillectBot extends Client {
     super({
       disabledEvents: ["TYPING_START"],
     });
-    this.guildSettings = new Enmap({
-      name: "guild-settings",
-      fetchAll: false,
-      autoFetch: false,
-      cloneLevel: "deep",
-    });
+    this.settingsManager = new SettingsManager();
     this.commands = new Collection();
   }
 
@@ -58,7 +53,7 @@ class ArchillectBot extends Client {
     guild: Guild,
     embed: RichEmbed
   ): Promise<Message | Error> {
-    let channel = await this.getArchillectChannel(guild);
+    let channel = this.getArchillectChannel(guild);
 
     if (!channel) {
       console.log(
@@ -89,26 +84,34 @@ class ArchillectBot extends Client {
     );
   }
 
-  public async getArchillectChannel(
-    guild: Guild
-  ): Promise<TextChannel | undefined> {
-    const settings = (await this.guildSettings.fetch(
-      guild.id
-    )) as GuildSettings;
-    if (!settings || !settings.channelId) return undefined;
+  public getArchillectChannel(guild: Guild): TextChannel | undefined {
+    const guildSettings = this.settingsManager.ensure(guild.id);
 
-    return guild.channels.get(settings.channelId) as (TextChannel | undefined);
+    if (guildSettings.channelId) {
+      return guild.channels.get(guildSettings.channelId) as
+        | TextChannel
+        | undefined;
+    } else {
+      const channel = guild.channels.find(
+        (channel): boolean =>
+          channel.type === "text" && channel.name === "archillect"
+      ) as TextChannel;
+
+      if (channel) {
+        this.settingsManager.updateField(guild, "channelId", channel.id);
+      }
+
+      return channel;
+    }
   }
 
   public async createArchillectChannel(guild: Guild): Promise<TextChannel> {
-    const channel = (await guild.createChannel(
-      "archillect",
-      "text",
-      undefined,
-      "Archillect's images will be sent in this channel"
-    )) as TextChannel;
+    const channel = (await guild.createChannel("archillect", {
+      type: "text",
+      topic: "Archillect's images will be sent in this channel",
+    })) as TextChannel;
 
-    this.guildSettings.set(guild.id, channel.id, "channelId");
+    this.settingsManager.updateField(guild, "channelId", channel.id);
 
     return channel;
   }

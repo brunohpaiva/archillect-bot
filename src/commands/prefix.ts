@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { Command, GuildSettings } from "../types";
+import { Command } from "../types";
 import ArchillectBot from "../ArchillectBot";
 
 export default class Prefix implements Command {
@@ -10,9 +10,7 @@ export default class Prefix implements Command {
     message: Message,
     client: ArchillectBot
   ): Promise<void> {
-    const guildSettings = (await client.guildSettings.fetch(
-      message.guild.id
-    )) as GuildSettings;
+    const guildSettings = client.settingsManager.get(message.guild);
     const currentPrefix = guildSettings ? guildSettings.prefix : "a!";
 
     if (!message.member.hasPermission("ADMINISTRATOR")) {
@@ -28,7 +26,7 @@ export default class Prefix implements Command {
 
     const newPrefix = args[0].toLowerCase();
 
-    client.guildSettings.set(message.guild.id, newPrefix, "prefix");
+    client.settingsManager.updateField(message.guild.id, "prefix", newPrefix);
     message.reply("New prefix set!");
   }
 }
