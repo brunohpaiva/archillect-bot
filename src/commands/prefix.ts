@@ -10,23 +10,26 @@ export default class Prefix implements Command {
     message: Message,
     client: ArchillectBot
   ): Promise<void> {
+    if (!message.guild) {
+      return;
+    }
+
     const guildSettings = client.settingsManager.get(message.guild);
     const currentPrefix = guildSettings ? guildSettings.prefix : "a!";
 
-    if (!message.member.hasPermission("ADMINISTRATOR")) {
+    if (!message.member?.hasPermission("ADMINISTRATOR")) {
       return;
     }
 
     if (args.length === 0) {
-      message.channel.send(
-        `Wrong usage! Use \`${currentPrefix}${this.usage}\``
-      );
+      await message.channel.send(`Current prefix: \`${currentPrefix}\`
+Use \`${currentPrefix}${this.usage}\` to change it.`);
       return;
     }
 
     const newPrefix = args[0].toLowerCase();
 
     client.settingsManager.updateField(message.guild.id, "prefix", newPrefix);
-    message.reply("New prefix set!");
+    await message.reply("New prefix set!");
   }
 }

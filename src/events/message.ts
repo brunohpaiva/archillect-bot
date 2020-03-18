@@ -9,7 +9,14 @@ const executor = async (
   client: ArchillectBot,
   message: Message
 ): Promise<void> => {
-  if (message.author.bot || message.channel.type === "dm") return;
+  if (
+    message.author.bot ||
+    message.channel.type === "dm" ||
+    !message.guild ||
+    !client.user
+  ) {
+    return;
+  }
 
   const guildSettings = client.settingsManager.get(message.guild);
   const guildPrefix = guildSettings ? escapeRegex(guildSettings.prefix) : "a!";
@@ -39,14 +46,14 @@ const executor = async (
   commandName = commandName.toLowerCase();
 
   if (!client.commands.has(commandName)) {
-    message.reply(`Unknown command! Run \`${guildPrefix}help\``);
+    await message.reply(`Unknown command! Run \`${guildPrefix}help\``);
     return;
   }
 
   const command = client.commands.get(commandName) as Command;
 
   try {
-    command.run(args, message, client);
+    await command.run(args, message, client);
   } catch (e) {
     console.error(e);
   }

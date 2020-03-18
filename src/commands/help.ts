@@ -10,12 +10,17 @@ export default class Help implements Command {
     message: Message,
     client: ArchillectBot
   ): Promise<void> {
+    if (!message.guild) {
+      return;
+    }
+
     const guildSettings = client.settingsManager.get(message.guild);
     const prefix = guildSettings ? guildSettings.prefix : "a!";
 
-    message.channel.send(`\`\`\`
+    await message.channel.send(`\`\`\`
 ${prefix}help - Shows this help message
 ${prefix}prefix <prefix> - Changes the guild prefix
+${prefix}invite - Sends the invite link for this bot
 \`\`\``);
   }
 }

@@ -1,6 +1,6 @@
 import buildImageEmbed from "./buildImageEmbed";
 import { ArchillectImage } from "../types";
-import { RichEmbedOptions } from "discord.js";
+import { MessageEmbedOptions } from "discord.js";
 
 it("builds embed from image", () => {
   const image: ArchillectImage = {
@@ -16,15 +16,14 @@ it("builds embed from image", () => {
     },
   };
   const embed = buildImageEmbed(image);
-  expect(embed).toMatchObject<RichEmbedOptions>({
+  expect(embed).toMatchObject<MessageEmbedOptions>({
     title: "New image",
     description: undefined,
     url: `https://archillect.com/${image.id}`,
-    color: 16700087,
     author: {
       name: "Archillect",
       url: "https://archillect.com",
-      icon_url:
+      iconURL:
         "https://pbs.twimg.com/profile_images/1045579977067024384/S0luKMwQ_400x400.jpg",
     },
     fields: [

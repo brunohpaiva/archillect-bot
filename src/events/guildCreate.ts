@@ -5,7 +5,7 @@ import buildImageEmbed from "../utils/buildImageEmbed";
 const executor = (client: ArchillectBot, guild: Guild): void => {
   client.settingsManager.ensure(guild.id);
 
-  const channel = guild.channels.find(
+  const channel = guild.channels.cache.find(
     (channel): boolean =>
       channel.type === "text" && channel.name === "archillect"
   );

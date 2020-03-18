@@ -1,11 +1,10 @@
 import { ArchillectImage } from "../types";
-import { RichEmbed } from "discord.js";
+import { MessageEmbed } from "discord.js";
 
-const buildImageEmbed = (image: ArchillectImage): RichEmbed => {
-  const embed = new RichEmbed({
+const buildImageEmbed = (image: ArchillectImage): MessageEmbed => {
+  const embed = new MessageEmbed({
     title: "New image",
     url: `https://archillect.com/${image.id}`,
-    color: 16700087,
     timestamp: new Date(),
     author: {
       name: "Archillect",

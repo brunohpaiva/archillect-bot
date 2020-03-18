@@ -1,0 +1,23 @@
+[
+  {
+    "status": "dnd",
+    "activity": {
+      "type": "WATCHING",
+      "name": "archillect.com"
+    }
+  },
+  {
+    "status": "online",
+    "activity": {
+      "type": "WATCHING",
+      "name": "{guilds} guilds"
+    }
+  },
+  {
+    "status": "online",
+    "activity": {
+      "type": "PLAYING",
+      "name": "with {users} users"
+    }
+  }
+]
