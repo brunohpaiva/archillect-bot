@@ -28,11 +28,6 @@ it("builds embed from image", () => {
     },
     fields: [
       {
-        name: "Google Image Search",
-        value: image.sources.google,
-        inline: false,
-      },
-      {
         name: "Links",
         value: image.sources.otherLinks.join("\n"),
         inline: false,
