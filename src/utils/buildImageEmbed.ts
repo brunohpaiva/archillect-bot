@@ -15,8 +15,6 @@ const buildImageEmbed = (image: ArchillectImage): MessageEmbed => {
     image: { url: image.url },
   });
 
-  embed.addField("Google Image Search", image.sources.google);
-
   if (image.sources.otherLinks.length > 0)
     embed.addField("Links", image.sources.otherLinks.join("\n"));
 

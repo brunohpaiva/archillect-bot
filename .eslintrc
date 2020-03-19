@@ -20,6 +20,7 @@
       {
         "allow": ["icon_url"]
       }
-    ]
+    ],
+    "@typescript-eslint/ban-ts-ignore": "off"
   }
 }

@@ -1,5 +1,6 @@
 import { PresenceData } from "discord.js";
 import ArchillectBot from "../ArchillectBot";
+// @ts-ignore TS6059
 import presences from "../../presences.json";
 
 interface Replacement {
